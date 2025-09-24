@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var showTimeAlert = false
     @State private var currentTimeText = ""
+    @Binding var isDarkMode: Bool
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -24,6 +25,11 @@ struct ContentView: View {
                 showTimeAlert = true
             }
             .padding(.top, 12)
+
+            Button(isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode") {
+                isDarkMode.toggle()
+            }
+            .padding(.top, 8)
         }
         .padding()
         .alert("Current Time", isPresented: $showTimeAlert) {
@@ -35,5 +41,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(isDarkMode: .constant(false))
 }

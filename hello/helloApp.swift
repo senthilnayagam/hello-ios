@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct helloApp: App {
+    @State private var isDarkMode: Bool = false
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(isDarkMode: $isDarkMode)
+                .preferredColorScheme(isDarkMode ? .dark : .light)
         }
     }
 }
