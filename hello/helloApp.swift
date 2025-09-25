@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct helloApp: App {
-    @State private var isDarkMode: Bool = false
+    @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     @State private var showSplash: Bool = true
     var body: some Scene {
         WindowGroup {

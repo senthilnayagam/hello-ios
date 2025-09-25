@@ -18,7 +18,7 @@ struct ContentView: View {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
     }
     @State private var showExitConfirmation = false
-    @State private var name: String = ""
+    @AppStorage("username") private var name: String = ""
     var body: some View {
         VStack {
             // App title at the top
