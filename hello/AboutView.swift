@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AboutView: View {
+    var showsCloseButton: Bool = true
     @Environment(\.dismiss) private var dismiss
 
     private var appName: String {
@@ -59,8 +60,10 @@ struct AboutView: View {
             }
             .navigationTitle("About")
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Close") { dismiss() }
+                if showsCloseButton {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Close") { dismiss() }
+                    }
                 }
             }
         }
