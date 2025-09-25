@@ -4,41 +4,25 @@
     {
       "label": "Check Xcode path",
       "type": "shell",
-      "command": "zsh",
-      "args": [
-        "-lc",
-        "xcode-select -p || true; echo '---'; xcodebuild -version || true; echo 'If this shows CommandLineTools or xcodebuild fails, run:\n  sudo xcode-select -s /Applications/Xcode.app/Contents/Developer'"
-      ],
+      "command": "xcode-select -p || true; echo ---; xcodebuild -version || true; printf \"If this shows CommandLineTools or xcodebuild fails, run:\n  sudo xcode-select -s /Applications/Xcode.app/Contents/Developer\n\"",
       "problemMatcher": []
     },
     {
       "label": "iOS: Boot Simulator (iPhone 17)",
       "type": "shell",
-      "command": "zsh",
-      "args": [
-        "-lc",
-        "open -a Simulator || true; xcrun simctl boot C796479F-1DC4-4EF5-B236-3EFAF73F5D98 >/dev/null 2>&1 || true; xcrun simctl bootstatus C796479F-1DC4-4EF5-B236-3EFAF73F5D98 -b || true"
-      ],
+      "command": "open -a Simulator || true; xcrun simctl boot C796479F-1DC4-4EF5-B236-3EFAF73F5D98 >/dev/null 2>&1 || true; xcrun simctl bootstatus C796479F-1DC4-4EF5-B236-3EFAF73F5D98 -b || true",
       "problemMatcher": []
     },
     {
       "label": "iOS: Build (Simulator)",
       "type": "shell",
-      "command": "zsh",
-      "args": [
-        "-lc",
-        "xcodebuild -project hello.xcodeproj -scheme hello -configuration Debug -destination \"platform=iOS Simulator,id=C796479F-1DC4-4EF5-B236-3EFAF73F5D98\" -derivedDataPath .vscode/build || ( printf '\\nIf this failed with CommandLineTools error, run:\\n  sudo xcode-select -s /Applications/Xcode.app/Contents/Developer\\n' >&2; exit 1 )"
-      ],
+      "command": "xcodebuild -project hello.xcodeproj -scheme hello -configuration Debug -destination \"platform=iOS Simulator,id=C796479F-1DC4-4EF5-B236-3EFAF73F5D98\" -derivedDataPath .vscode/build || { printf \"\\nIf this failed with CommandLineTools error, run:\n  sudo xcode-select -s /Applications/Xcode.app/Contents/Developer\n\" >&2; exit 1; }",
       "problemMatcher": ["$swiftc"]
     },
     {
       "label": "iOS: Install + Launch (Simulator)",
       "type": "shell",
-      "command": "zsh",
-      "args": [
-        "-lc",
-        "APP=.vscode/build/Build/Products/Debug-iphonesimulator/hello.app; BID=muonium.hello; if [ ! -d \"$APP\" ]; then echo 'App not built. Run: iOS: Build (Simulator)'; exit 1; fi; xcrun simctl uninstall C796479F-1DC4-4EF5-B236-3EFAF73F5D98 \"$BID\" >/dev/null 2>&1 || true; xcrun simctl install C796479F-1DC4-4EF5-B236-3EFAF73F5D98 \"$APP\"; xcrun simctl launch C796479F-1DC4-4EF5-B236-3EFAF73F5D98 \"$BID\" || true"
-      ],
+      "command": "APP=.vscode/build/Build/Products/Debug-iphonesimulator/hello.app; BID=muonium.hello; if [ ! -d \"$APP\" ]; then echo \"App not built. Run: iOS: Build (Simulator)\"; exit 1; fi; xcrun simctl uninstall C796479F-1DC4-4EF5-B236-3EFAF73F5D98 \"$BID\" >/dev/null 2>&1 || true; xcrun simctl install C796479F-1DC4-4EF5-B236-3EFAF73F5D98 \"$APP\"; xcrun simctl launch C796479F-1DC4-4EF5-B236-3EFAF73F5D98 \"$BID\" || true",
       "problemMatcher": []
     },
     {
@@ -48,6 +32,18 @@
         "iOS: Build (Simulator)",
         "iOS: Install + Launch (Simulator)"
       ],
+      "problemMatcher": []
+    },
+    {
+      "label": "iOS: Run via script",
+      "type": "shell",
+      "command": "bash scripts/ios-run.sh",
+      "problemMatcher": []
+    },
+    {
+      "label": "iOS: Clean (fresh build)",
+      "type": "shell",
+      "command": "bash scripts/ios-clean.sh -c -U -Q",
       "problemMatcher": []
     }
   ]
