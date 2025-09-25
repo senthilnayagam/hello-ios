@@ -72,6 +72,17 @@ struct ServerView: View {
     @StateObject private var loc = LocationProvider()
     @State private var publicIP: String = "—"
     @State private var showBrowser: Bool = false
+    @State private var sunrise: Date?
+    @State private var sunset: Date?
+
+    private static let sunTimeFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = .current
+        f.timeZone = .current
+        f.dateStyle = .none
+        f.timeStyle = .short
+        return f
+    }()
 
     private var ipInfoURL: URL? {
         guard publicIP != "—", let url = URL(string: "https://whatismyipaddress.com/ip/\(publicIP)") else { return nil }
@@ -127,6 +138,21 @@ struct ServerView: View {
                                         .font(.system(.body, design: .monospaced))
                                         .foregroundStyle(.secondary)
                                 }
+                                Divider()
+                                HStack {
+                                    Text("Sunrise")
+                                    Spacer()
+                                    Text(formatSunTime(sunrise))
+                                        .font(.system(.body, design: .monospaced))
+                                        .foregroundStyle(.secondary)
+                                }
+                                HStack {
+                                    Text("Sunset")
+                                    Spacer()
+                                    Text(formatSunTime(sunset))
+                                        .font(.system(.body, design: .monospaced))
+                                        .foregroundStyle(.secondary)
+                                }
                             case .denied, .restricted:
                                 Text("Location access denied. Enable it in Settings to see coordinates and motion.")
                                     .foregroundStyle(.secondary)
@@ -159,6 +185,12 @@ struct ServerView: View {
         }
         .onAppear {
             loc.request()
+        }
+        .onReceive(loc.$coordinate) { newValue in
+            guard let c = newValue else { return }
+            let (sr, ss) = computeSunriseSunset(for: Date(), latitude: c.latitude, longitude: c.longitude)
+            sunrise = sr
+            sunset = ss
         }
     }
 
@@ -196,6 +228,84 @@ struct ServerView: View {
     private func formatCourse(_ course: CLLocationDirection?) -> String {
         guard let d = course else { return "—" }
         return String(format: "%.0f°", d)
+    }
+
+    private func formatSunTime(_ date: Date?) -> String {
+        guard let d = date else { return "—" }
+        return Self.sunTimeFormatter.string(from: d)
+    }
+
+    // MARK: - Sunrise/Sunset Calculation (NOAA algorithm)
+    private func computeSunriseSunset(for date: Date, latitude: Double, longitude: Double) -> (Date?, Date?) {
+        func degrees(_ rad: Double) -> Double { rad * 180.0 / .pi }
+        func radians(_ deg: Double) -> Double { deg * .pi / 180.0 }
+
+        // Use the user's local calendar for the target day (N = day-of-year for local date)
+        let localCal = Calendar(identifier: .gregorian)
+        let N = Double(localCal.ordinality(of: .day, in: .year, for: date) ?? 1)
+
+    // NOAA algorithm expects longitude in degrees WEST (positive west, negative east).
+    // CoreLocation uses positive EAST longitudes, so invert the sign here.
+    let lngHour = -longitude / 15.0
+        let zenith = 90.833 // official sunrise/sunset
+
+        func calculate(isSunrise: Bool) -> Date? {
+            // 1) Approximate time
+            let t = N + ((isSunrise ? (6.0 - lngHour) : (18.0 - lngHour)) / 24.0)
+
+            // 2) Sun's mean anomaly
+            let M = (0.9856 * t) - 3.289
+
+            // 3) Sun's true longitude
+            var L = M + (1.916 * sin(radians(M))) + (0.020 * sin(radians(2 * M))) + 282.634
+            L = fmod(L, 360.0)
+            if L < 0 { L += 360.0 }
+
+            // 4) Sun's right ascension
+            var RA = degrees(atan(0.91764 * tan(radians(L))))
+            RA = fmod(RA, 360.0)
+            if RA < 0 { RA += 360.0 }
+            // Put RA in the same quadrant as L
+            let Lquadrant = floor(L / 90.0) * 90.0
+            let RAquadrant = floor(RA / 90.0) * 90.0
+            RA = RA + (Lquadrant - RAquadrant)
+            RA /= 15.0
+
+            // 5) Sun's declination
+            let sinDec = 0.39782 * sin(radians(L))
+            let cosDec = cos(asin(sinDec))
+
+            // 6) Sun's local hour angle
+            let cosH = (cos(radians(zenith)) - (sinDec * sin(radians(latitude)))) / (cosDec * cos(radians(latitude)))
+            if isSunrise && cosH > 1 { return nil }      // sun never rises on this location (on the specified date)
+            if !isSunrise && cosH < -1 { return nil }    // sun never sets on this location (on the specified date)
+
+            var H = isSunrise ? (360.0 - degrees(acos(cosH))) : degrees(acos(cosH))
+            H /= 15.0
+
+            // 7) Local mean time and UT
+            let T = H + RA - (0.06571 * t) - 6.622
+            var UT = T - lngHour
+            UT = fmod(UT, 24.0)
+            if UT < 0 { UT += 24.0 }
+
+            // 8) Build a Date at UT for the LOCAL calendar day
+            var ymd = localCal.dateComponents([.year, .month, .day], from: date)
+            ymd.timeZone = TimeZone(secondsFromGMT: 0)
+            ymd.hour = Int(UT)
+            ymd.minute = Int((UT - floor(UT)) * 60.0)
+            let secondsFrac = (((UT - floor(UT)) * 60.0) - Double(ymd.minute ?? 0)) * 60.0
+            ymd.second = Int(secondsFrac.rounded())
+
+            var utcCal = Calendar(identifier: .gregorian)
+            utcCal.timeZone = TimeZone(secondsFromGMT: 0)!
+            return utcCal.date(from: ymd)
+        }
+
+        // Return UTC instants; formatting to local time is handled by DateFormatter
+        let srUTC = calculate(isSunrise: true)
+        let ssUTC = calculate(isSunrise: false)
+        return (srUTC, ssUTC)
     }
 }
 
