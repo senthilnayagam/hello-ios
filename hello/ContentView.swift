@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 #if os(macOS)
 import AppKit
 #endif
@@ -20,6 +21,15 @@ struct ContentView: View {
     @State private var showExitConfirmation = false
     @AppStorage("username") private var name: String = ""
     @State private var showAbout: Bool = false
+    // Live clock state
+    @State private var currentDate: Date = Date()
+    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    private static let timeFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateStyle = .none
+        f.timeStyle = .medium
+        return f
+    }()
     var body: some View {
         VStack {
             // App title at the top
@@ -51,6 +61,11 @@ struct ContentView: View {
                         .font(.title3)
                         .padding(.top, 4)
                 }
+                // Live clock label
+                Text(Self.timeFormatter.string(from: currentDate))
+                    .font(.title3)
+                    .monospacedDigit()
+                    .padding(.top, 8)
                 Button("Show Time") {
                     let formatter = DateFormatter()
                     formatter.dateStyle = .none
@@ -82,6 +97,9 @@ struct ContentView: View {
         .padding()
         .sheet(isPresented: $showAbout) {
             AboutView()
+        }
+        .onReceive(timer) { date in
+            currentDate = date
         }
         .alert("Current Time", isPresented: $showTimeAlert) {
             Button("OK", role: .cancel) {}

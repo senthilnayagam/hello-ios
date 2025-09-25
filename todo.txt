@@ -2,25 +2,41 @@ Hello App — Feature Ideas (beginner-friendly)
 
 How to use: Pick a few items, mark them with [x], and add any notes below the item.
 
+Completed
+---------
+
 1) [x] Personalized greeting
    - Show a TextField for name and display "Hello, <name>!" under it.
    - Difficulty: Easy | Files: hello/ContentView.swift
    - Done when: Greeting updates live as the user types. (Implemented: TextField + live Text("Hello, <name>!") when name not empty.)
 
-2) [ ] Live clock label
+2) [x] Live clock label
    - Show a label that updates every second with the current time (Timer.publish).
    - Difficulty: Easy–Med | Files: hello/ContentView.swift
-   - Done when: Time ticks every second without tapping a button.
-
-3) [ ] Date picker + formatted output
-   - Add a DatePicker and show selected date/time using DateFormatter.
-   - Difficulty: Easy | Files: hello/ContentView.swift
-   - Done when: Changing the picker updates a formatted text below it.
+   - Done when: Time ticks every second without tapping a button. (Implemented: Timer.publish + .onReceive + DateFormatter; added import Combine.)
 
 4) [x] Persist dark mode choice
    - Save the dark/light toggle using @AppStorage("isDarkMode").
    - Difficulty: Easy | Files: hello/helloApp.swift, hello/ContentView.swift
    - Done when: App remembers theme across launches. (Implemented: @AppStorage("isDarkMode") in helloApp.swift; ContentView binds to it.)
+
+8) [x] Save username with @AppStorage
+   - Persist the text from the name field to UserDefaults via @AppStorage.
+   - Difficulty: Easy | Files: hello/ContentView.swift
+   - Done when: Name pre-fills on next app launch. (Implemented: @AppStorage("username") backing the TextField.)
+
+11) [x] About screen
+   - New view showing app name, version, build number, and a short description.
+   - Difficulty: Easy | Files: hello/ContentView.swift, hello/AboutView.swift
+   - Done when: Accessible via a button or an About tab. (Implemented: AboutView + "About" button sheet in ContentView.)
+
+Todo items
+----------
+
+3) [ ] Date picker + formatted output
+   - Add a DatePicker and show selected date/time using DateFormatter.
+   - Difficulty: Easy | Files: hello/ContentView.swift
+   - Done when: Changing the picker updates a formatted text below it.
 
 5) [ ] Accent color picker
    - Let users choose an accent color (ColorPicker) and save it with @AppStorage.
@@ -37,11 +53,6 @@ How to use: Pick a few items, mark them with [x], and add any notes below the it
    - Difficulty: Med | Files: hello/ContentView.swift
    - Done when: You can add and remove notes; state persists while app is open.
 
-8) [x] Save username with @AppStorage
-   - Persist the text from the name field to UserDefaults via @AppStorage.
-   - Difficulty: Easy | Files: hello/ContentView.swift
-   - Done when: Name pre-fills on next app launch. (Implemented: @AppStorage("username") backing the TextField.)
-
 9) [ ] Share current time
    - Add a ShareLink to share the current time text.
    - Difficulty: Easy | Files: hello/ContentView.swift
@@ -51,11 +62,6 @@ How to use: Pick a few items, mark them with [x], and add any notes below the it
    - Trigger light impact when tapping Show Time or theme toggle (UIImpactFeedbackGenerator).
    - Difficulty: Med | Files: hello/ContentView.swift
    - Done when: You feel a tap/vibration on supported devices.
-
-11) [ ] About screen
-   - New view showing app name, version, build number, and a short description.
-   - Difficulty: Easy | Files: hello/ContentView.swift (or new AboutView.swift)
-   - Done when: Accessible via a button or an About tab.
 
 12) [ ] Accessibility pass
    - Add accessibilityLabel/hint to buttons; ensure Dynamic Type scales well.
