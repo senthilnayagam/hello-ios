@@ -15,6 +15,11 @@ Completed
    - Difficulty: Easy–Med | Files: hello/ContentView.swift
    - Done when: Time ticks every second without tapping a button. (Implemented: Timer.publish + .onReceive + DateFormatter; added import Combine.)
 
+3) [x] Date picker + formatted output
+   - Add a DatePicker and show selected date/time using DateFormatter.
+   - Difficulty: Easy | Files: hello/ContentView.swift
+   - Done when: Changing the picker updates a formatted text below it. (Implemented: DatePicker with [.date, .hourAndMinute], @State selectedDate, and a medium/short DateFormatter label.)
+
 4) [x] Persist dark mode choice
    - Save the dark/light toggle using @AppStorage("isDarkMode").
    - Difficulty: Easy | Files: hello/helloApp.swift, hello/ContentView.swift
@@ -25,6 +30,11 @@ Completed
    - Difficulty: Easy | Files: hello/ContentView.swift
    - Done when: Name pre-fills on next app launch. (Implemented: @AppStorage("username") backing the TextField.)
 
+6) [x] Tab-based navigation
+   - Convert main layout to TabView with Home, Settings, About tabs.
+   - Difficulty: Med | Files: hello/ContentView.swift (+ new SwiftUI files optional)
+   - Done when: You can switch tabs and each has its own content. (Implemented: TabView with HomeView, SettingsView, and AboutView.)
+
 11) [x] About screen
    - New view showing app name, version, build number, and a short description.
    - Difficulty: Easy | Files: hello/ContentView.swift, hello/AboutView.swift
@@ -33,20 +43,10 @@ Completed
 Todo items
 ----------
 
-3) [x] Date picker + formatted output
-   - Add a DatePicker and show selected date/time using DateFormatter.
-   - Difficulty: Easy | Files: hello/ContentView.swift
-   - Done when: Changing the picker updates a formatted text below it. (Implemented: DatePicker with [.date, .hourAndMinute], @State selectedDate, and a medium/short DateFormatter label.)
-
 5) [ ] Accent color picker
    - Let users choose an accent color (ColorPicker) and save it with @AppStorage.
    - Difficulty: Med | Files: hello/ContentView.swift
    - Done when: Buttons/tint use the saved accent color.
-
-6) [ ] Tab-based navigation
-   - Convert main layout to TabView with Home, Settings, About tabs.
-   - Difficulty: Med | Files: hello/ContentView.swift (+ new SwiftUI files optional)
-   - Done when: You can switch tabs and each has its own content.
 
 7) [ ] Simple notes list
    - A List with add/delete (swipe to delete) of short text notes (in-memory).
