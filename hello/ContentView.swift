@@ -19,11 +19,16 @@ struct ContentView: View {
     }
     @State private var showExitConfirmation = false
     @AppStorage("username") private var name: String = ""
+    @State private var showAbout: Bool = false
     var body: some View {
         VStack {
             // App title at the top
-            Text("Hello App")
-                .font(.largeTitle).bold()
+            HStack {
+                Text("Hello App")
+                    .font(.largeTitle).bold()
+                Spacer()
+                Button("About") { showAbout = true }
+            }
 
             Spacer()
 
@@ -75,6 +80,9 @@ struct ContentView: View {
                 .foregroundColor(.gray)
         }
         .padding()
+        .sheet(isPresented: $showAbout) {
+            AboutView()
+        }
         .alert("Current Time", isPresented: $showTimeAlert) {
             Button("OK", role: .cancel) {}
         } message: {
