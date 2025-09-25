@@ -23,6 +23,10 @@ struct ContentView: View {
                 .tabItem {
                     Label("Settings", systemImage: "gearshape")
                 }
+            ServerView()
+                .tabItem {
+                    Label("Server", systemImage: "server.rack")
+                }
             AboutView(showsCloseButton: false)
                 .tabItem {
                     Label("About", systemImage: "info.circle")
