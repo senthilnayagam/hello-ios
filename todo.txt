@@ -33,10 +33,10 @@ Completed
 Todo items
 ----------
 
-3) [ ] Date picker + formatted output
+3) [x] Date picker + formatted output
    - Add a DatePicker and show selected date/time using DateFormatter.
    - Difficulty: Easy | Files: hello/ContentView.swift
-   - Done when: Changing the picker updates a formatted text below it.
+   - Done when: Changing the picker updates a formatted text below it. (Implemented: DatePicker with [.date, .hourAndMinute], @State selectedDate, and a medium/short DateFormatter label.)
 
 5) [ ] Accent color picker
    - Let users choose an accent color (ColorPicker) and save it with @AppStorage.

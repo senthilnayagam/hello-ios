@@ -23,11 +23,19 @@ struct ContentView: View {
     @State private var showAbout: Bool = false
     // Live clock state
     @State private var currentDate: Date = Date()
+    // Date picker state
+    @State private var selectedDate: Date = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     private static let timeFormatter: DateFormatter = {
         let f = DateFormatter()
         f.dateStyle = .none
         f.timeStyle = .medium
+        return f
+    }()
+    private static let dateTimeFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateStyle = .medium
+        f.timeStyle = .short
         return f
     }()
     var body: some View {
@@ -66,6 +74,20 @@ struct ContentView: View {
                     .font(.title3)
                     .monospacedDigit()
                     .padding(.top, 8)
+
+                // Date picker + formatted output
+                DatePicker(
+                    "Select Date & Time",
+                    selection: $selectedDate,
+                    displayedComponents: [.date, .hourAndMinute]
+                )
+                .datePickerStyle(.compact)
+                .padding(.top, 12)
+
+                Text(Self.dateTimeFormatter.string(from: selectedDate))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .padding(.top, 4)
                 Button("Show Time") {
                     let formatter = DateFormatter()
                     formatter.dateStyle = .none
