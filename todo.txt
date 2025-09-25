@@ -2,10 +2,10 @@ Hello App — Feature Ideas (beginner-friendly)
 
 How to use: Pick a few items, mark them with [x], and add any notes below the item.
 
-1) [ ] Personalized greeting
+1) [x] Personalized greeting
    - Show a TextField for name and display "Hello, <name>!" under it.
    - Difficulty: Easy | Files: hello/ContentView.swift
-   - Done when: Greeting updates live as the user types.
+   - Done when: Greeting updates live as the user types. (Implemented: TextField + live Text("Hello, <name>!") when name not empty.)
 
 2) [ ] Live clock label
    - Show a label that updates every second with the current time (Timer.publish).

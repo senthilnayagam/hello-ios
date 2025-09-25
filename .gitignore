@@ -1,0 +1,39 @@
+# macOS
+.DS_Store
+
+# VS Code build output
+.vscode/build/
+
+# Xcode
+build/
+DerivedData/
+
+# User-specific Xcode files
+**/*.pbxuser
+!**/default.pbxuser
+**/*.mode1v3
+!**/default.mode1v3
+**/*.mode2v3
+!**/default.mode2v3
+**/*.perspectivev3
+!**/default.perspectivev3
+**/xcuserdata/
+**/*.xccheckout
+**/*.moved-aside
+**/*.xcscmblueprint
+
+# Swift Package Manager
+.swiftpm/
+.build/
+
+# CocoaPods (if used later)
+Pods/
+
+# Carthage (if used later)
+Carthage/Build/
+
+# Fastlane (if used later)
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output

@@ -18,6 +18,7 @@ struct ContentView: View {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
     }
     @State private var showExitConfirmation = false
+    @State private var name: String = ""
     var body: some View {
         VStack {
             // App title at the top
@@ -32,6 +33,19 @@ struct ContentView: View {
                     .imageScale(.large)
                     .foregroundStyle(.tint)
                 Text("Hello, world!")
+
+                // Personalized greeting input
+                TextField("Enter your name", text: $name)
+                    .textFieldStyle(.roundedBorder)
+                    .textInputAutocapitalization(.words)
+                    .disableAutocorrection(true)
+                    .padding(.top, 8)
+
+                if !name.isEmpty {
+                    Text("Hello, \(name)!")
+                        .font(.title3)
+                        .padding(.top, 4)
+                }
                 Button("Show Time") {
                     let formatter = DateFormatter()
                     formatter.dateStyle = .none
